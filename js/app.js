@@ -13,6 +13,7 @@ const state = load() || {
   players: [newPlayer(), newPlayer()],
   opts: { ...DEFAULT_OPTS },
   eventName: "",
+  hiddenTarget: null, // 숨김 홀 파 합 목표. null 이면 코스 파의 2/3
 };
 
 function newPlayer(name = "") {
@@ -86,6 +87,7 @@ function renderParTotal() {
 
 // ---------- 1. 숨김 홀 ----------
 function renderHoles() {
+  $("optTarget").placeholder = `자동 (${hiddenParTarget(state.pars)})`;
   $("holeGrid").innerHTML = "";
   state.pars.forEach((par, i) => {
     const b = document.createElement("button");
@@ -101,7 +103,7 @@ function renderHoles() {
     $("holeGrid").append(b);
   });
 
-  const c = checkHidden(state.pars, state.hidden);
+  const c = checkHidden(state.pars, state.hidden, hiddenTarget());
   const el = $("hiddenStatus");
   el.textContent =
     `전반 ${c.front}/6 · 후반 ${c.back}/6 · 파 합계 ${c.parSum}/${c.target}` + (c.ok ? " ✓ 준비 완료" : "");
@@ -109,8 +111,8 @@ function renderHoles() {
 }
 
 $("pickBtn").addEventListener("click", () => {
-  const picked = pickHidden(state.pars);
-  if (!picked) return toast("이 코스 파로는 맞는 조합이 없습니다. 직접 골라 주세요");
+  const picked = pickHidden(state.pars, hiddenTarget());
+  if (!picked) return toast("이 파 합으로는 맞는 조합이 없습니다. 세부 규칙에서 목표를 바꾸거나 직접 골라 주세요");
   state.hidden = picked;
   save();
   renderHoles();
@@ -129,6 +131,7 @@ function renderOpts() {
   $("optHcMax").value = state.opts.hcMax ?? "";
   $("optRounding").value = state.opts.rounding;
   $("optTie").value = state.opts.tie;
+  $("optTarget").value = state.hiddenTarget ?? "";
 }
 $("optDoublePar").addEventListener("change", (e) => { state.opts.doubleParCap = e.target.checked; save(); });
 $("optHcMax").addEventListener("change", (e) => {
@@ -139,6 +142,18 @@ $("optHcMax").addEventListener("change", (e) => {
 });
 $("optRounding").addEventListener("change", (e) => { state.opts.rounding = e.target.value; save(); });
 $("optTie").addEventListener("change", (e) => { state.opts.tie = e.target.value; save(); });
+$("optTarget").addEventListener("change", (e) => {
+  const v = parseInt(e.target.value, 10);
+  state.hiddenTarget = v >= 36 && v <= 60 ? v : null;
+  e.target.value = state.hiddenTarget ?? "";
+  save();
+  renderHoles();
+});
+
+// 클럽이 따로 정하지 않았으면 코스 파의 2/3 (파 72 → 48)
+function hiddenTarget() {
+  return state.hiddenTarget ?? hiddenParTarget(state.pars);
+}
 
 // ---------- 2. 타수 입력 ----------
 function renderPlayers() {
@@ -226,7 +241,7 @@ $("addPlayerBtn").addEventListener("click", () => {
 // ---------- 3. 결과 ----------
 function renderResult() {
   $("eventName").value = state.eventName;
-  const c = checkHidden(state.pars, state.hidden);
+  const c = checkHidden(state.pars, state.hidden, hiddenTarget());
   const { ranked, incomplete, medalists } = rankPlayers(state.pars, state.hidden, state.players, state.opts);
 
   const warns = [];

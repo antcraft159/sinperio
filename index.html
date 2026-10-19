@@ -8,6 +8,11 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="신페리오 계산기 · 골프 월례회">
   <meta property="og:description" content="숨김 홀 뽑기부터 핸디캡·순위·카톡 공유까지 폰으로 한 번에. 무료, 가입 없음.">
+  <meta property="og:url" content="https://antcraft159.github.io/sinperio/">
+  <!-- 카톡은 https 전체 주소의 jpg/png 만 미리보기로 띄운다 -->
+  <meta property="og:image" content="https://antcraft159.github.io/sinperio/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta name="theme-color" content="#1f6f4a">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -43,6 +48,9 @@
         <label class="check">
           <input type="checkbox" id="optDoublePar">
           숨김 홀 타수는 더블파까지만 셈
+        </label>
+        <label>숨김 홀 12개의 파 합
+          <input type="number" id="optTarget" inputmode="numeric" min="36" max="60">
         </label>
         <label>핸디캡 상한
           <input type="number" id="optHcMax" inputmode="decimal" placeholder="없음" min="0">

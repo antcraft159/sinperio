@@ -28,16 +28,16 @@ function coursePar(pars) {
 }
 
 // 숨김 홀로 맞춰야 할 파 합. 파 72 코스면 48.
+// 파 71 코스처럼 2/3 이 딱 떨어지지 않으면 가까운 정수로. (클럽이 다르게 정하면 화면에서 바꾼다)
 function hiddenParTarget(pars) {
-  return (coursePar(pars) * 2) / 3;
+  return Math.round((coursePar(pars) * 2) / 3);
 }
 
 // 숨김 홀 선택이 규칙에 맞는지 확인한다
-function checkHidden(pars, hidden) {
+function checkHidden(pars, hidden, target = hiddenParTarget(pars)) {
   const front = hidden.slice(0, 9).filter(Boolean).length;
   const back = hidden.slice(9).filter(Boolean).length;
   const parSum = sum(pars.filter((_, i) => hidden[i]));
-  const target = hiddenParTarget(pars);
   return {
     front,
     back,
@@ -49,8 +49,7 @@ function checkHidden(pars, hidden) {
 
 // 전반 6, 후반 6 을 무작위로 뽑되 파 합이 target 이 되게 한다.
 // 경우의 수가 84 × 84 라 그냥 여러 번 뽑아 보면 금방 맞는다.
-function pickHidden(pars, random = Math.random) {
-  const target = hiddenParTarget(pars);
+function pickHidden(pars, target = hiddenParTarget(pars), random = Math.random) {
   const pick6 = (offset) => {
     const idx = [0, 1, 2, 3, 4, 5, 6, 7, 8];
     for (let i = idx.length - 1; i > 0; i--) {
