@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>신페리오 계산기</title>
+  <meta name="description" content="골프 월례회 신페리오 점수를 폰으로 바로 계산합니다. 무료, 가입 없음.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="신페리오 계산기 · 골프 월례회">
+  <meta property="og:description" content="숨김 홀 뽑기부터 핸디캡·순위·카톡 공유까지 폰으로 한 번에. 무료, 가입 없음.">
+  <meta name="theme-color" content="#1f6f4a">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>신페리오 계산기</h1>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="course" aria-selected="true">1. 코스·숨김 홀</button>
+      <button role="tab" data-tab="scores">2. 타수 입력</button>
+      <button role="tab" data-tab="result">3. 결과</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 1. 코스와 숨김 홀 -->
+    <section class="panel" id="tab-course">
+      <h2>코스 파</h2>
+      <p class="hint">코스와 다르면 숫자를 눌러 고치세요.</p>
+      <div class="par-grid" id="parGrid"></div>
+      <p class="hint" id="parTotal"></p>
+
+      <h2>숨김 홀 12개</h2>
+      <p class="hint">홀을 눌러 고르거나 자동으로 뽑으세요. 선수들에게는 보여 주지 마세요.</p>
+      <div class="hole-grid" id="holeGrid"></div>
+      <p class="status" id="hiddenStatus"></p>
+      <div class="row">
+        <button class="btn" id="pickBtn" type="button">자동으로 뽑기</button>
+        <button class="btn ghost" id="clearHiddenBtn" type="button">모두 해제</button>
+      </div>
+
+      <details class="opts">
+        <summary>우리 클럽 세부 규칙</summary>
+        <label class="check">
+          <input type="checkbox" id="optDoublePar">
+          숨김 홀 타수는 더블파까지만 셈
+        </label>
+        <label>핸디캡 상한
+          <input type="number" id="optHcMax" inputmode="decimal" placeholder="없음" min="0">
+        </label>
+        <label>핸디캡 표시
+          <select id="optRounding">
+            <option value="decimal">소수 첫째 자리 (13.2)</option>
+            <option value="integer">정수로 반올림 (13)</option>
+          </select>
+        </label>
+        <label>네트가 같을 때
+          <select id="optTie">
+            <option value="lowerHc">핸디캡 낮은 사람이 위</option>
+            <option value="shared">공동 순위</option>
+          </select>
+        </label>
+      </details>
+    </section>
+
+    <!-- 2. 타수 입력 -->
+    <section class="panel" id="tab-scores" hidden>
+      <div id="players"></div>
+      <button class="btn wide" id="addPlayerBtn" type="button">+ 선수 추가</button>
+    </section>
+
+    <!-- 3. 결과 -->
+    <section class="panel" id="tab-result" hidden>
+      <label>모임 이름
+        <input id="eventName" placeholder="예: 10월 월례회" maxlength="30">
+      </label>
+      <p class="warn" id="resultWarn"></p>
+      <div class="table-wrap">
+        <table class="result">
+          <thead>
+            <tr><th>순위</th><th>이름</th><th>총타</th><th>핸디</th><th>네트</th></tr>
+          </thead>
+          <tbody id="resultBody"></tbody>
+        </table>
+      </div>
+      <p class="medal" id="medalist"></p>
+      <div class="row">
+        <button class="btn" id="copyBtn" type="button">카톡에 붙여넣을 결과 복사</button>
+      </div>
+      <button class="btn ghost wide" id="newRoundBtn" type="button">새 월례회 시작 (이름은 남기고 타수 지우기)</button>
+    </section>
+  </main>
+
+  <footer class="foot">
+    입력한 내용은 이 폰 안에만 저장됩니다. 무료 · 가입 없음
+  </footer>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="js/perio.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
