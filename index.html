@@ -3,8 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>신페리오 계산기</title>
-  <meta name="description" content="골프 월례회 신페리오 점수를 폰으로 바로 계산합니다. 무료, 가입 없음.">
+  <title>신페리오 계산기 - 골프 월례회 핸디캡·순위 자동 계산 (무료)</title>
+  <meta name="description" content="골프 월례회 신페리오 점수를 폰으로 바로 계산합니다. 숨김 홀 12개 자동 뽑기, 핸디캡·네트·순위·메달리스트 계산, 카톡 공유. 무료, 가입 없음.">
+  <link rel="canonical" href="https://antcraft159.github.io/sinperio/">
+  <!-- 검색엔진이 "웹 앱" 으로 알아보게 하는 정보 -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "신페리오 계산기",
+    "url": "https://antcraft159.github.io/sinperio/",
+    "description": "골프 월례회 신페리오 핸디캡과 순위를 폰으로 바로 계산하는 무료 웹 앱",
+    "applicationCategory": "SportsApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ko",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" }
+  }
+  </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="신페리오 계산기 · 골프 월례회">
   <meta property="og:description" content="숨김 홀 뽑기부터 핸디캡·순위·카톡 공유까지 폰으로 한 번에. 무료, 가입 없음.">
@@ -97,6 +112,19 @@
       <button class="btn ghost wide" id="newRoundBtn" type="button">새 월례회 시작 (이름은 남기고 타수 지우기)</button>
     </section>
   </main>
+
+  <!-- 검색엔진은 글자를 읽고 순위를 매긴다. 계산기만 있으면 읽을 글이 없어서 설명을 붙여 둔다. -->
+  <section class="about">
+    <h2>신페리오 방식이란?</h2>
+    <p>실력 차이가 나는 아마추어끼리도 공정하게 겨룰 수 있도록 <strong>그날 성적으로 핸디캡을 정하는 방식</strong>입니다. 골프 동호회 월례회에서 많이 씁니다.</p>
+    <ol>
+      <li>주최 측이 18홀 중 전반 6개, 후반 6개, 모두 12개 홀을 몰래 고릅니다. 12개 홀의 파 합은 보통 48입니다.</li>
+      <li>핸디캡 = (숨김 12홀 타수 합 × 1.5 − 코스 파 72) × 0.8</li>
+      <li>네트 타수 = 18홀 실제 타수 − 핸디캡. 네트가 낮은 사람이 우승입니다.</li>
+    </ol>
+    <p><strong>계산 예:</strong> 숨김 12홀 합이 59타, 18홀 총 84타라면 핸디캡은 (59 × 1.5 − 72) × 0.8 = 13.2, 네트는 84 − 13.2 = 70.8입니다.</p>
+    <p>이 계산기는 숨김 홀 뽑기부터 핸디캡, 순위, 메달리스트, 카톡 공유까지 폰에서 바로 해 줍니다. 더블파 상한, 핸디캡 상한, 동타 처리 같은 클럽별 규칙도 고를 수 있습니다.</p>
+  </section>
 
   <footer class="foot">
     입력한 내용은 이 폰 안에만 저장됩니다. 무료 · 가입 없음

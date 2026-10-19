@@ -213,3 +213,17 @@ input, select {
   pointer-events: none;
 }
 .toast.show { opacity: 1; }
+
+/* ---------- 신페리오 설명 (검색엔진용 글이기도 하다) ---------- */
+.about {
+  max-width: 640px;
+  margin: 24px auto 0;
+  padding: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--muted);
+}
+.about h2 { font-size: 15px; color: var(--ink); margin: 0 0 8px; }
+.about strong { color: var(--ink); }
+.about ol { padding-left: 20px; }
+.about li { margin-bottom: 4px; }
