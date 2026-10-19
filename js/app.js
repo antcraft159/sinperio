@@ -25,6 +25,9 @@ function load() {
     const s = JSON.parse(localStorage.getItem(STORE_KEY));
     // 예전 형식이거나 망가진 값이면 버리고 새로 시작
     if (s && Array.isArray(s.pars) && s.pars.length === 18 && Array.isArray(s.players)) {
+      // 숨김 홀 구성 설정이 없던 첫 판에서는 반올림 기본값이 "소수 첫째 자리" 였다.
+      // 그때 저장된 값은 사용자가 고른 게 아니라 기본값이라, 새 기본값(정수)으로 바꿔 준다.
+      if (s.opts && !("composition" in s.opts)) delete s.opts.rounding;
       s.opts = { ...DEFAULT_OPTS, ...s.opts };
       return s;
     }
@@ -103,16 +106,23 @@ function renderHoles() {
     $("holeGrid").append(b);
   });
 
-  const c = checkHidden(state.pars, state.hidden, hiddenTarget());
+  const c = checkHidden(state.pars, state.hidden, hiddenTarget(), state.opts.composition);
   const el = $("hiddenStatus");
+  const mixText = state.opts.composition === "standard"
+    ? ` · 파3 ${c.mix[3]}/2 · 파4 ${c.mix[4]}/8 · 파5 ${c.mix[5]}/2`
+    : "";
   el.textContent =
-    `전반 ${c.front}/6 · 후반 ${c.back}/6 · 파 합계 ${c.parSum}/${c.target}` + (c.ok ? " ✓ 준비 완료" : "");
+    `전반 ${c.front}/6 · 후반 ${c.back}/6 · 파 합계 ${c.parSum}/${c.target}${mixText}` + (c.ok ? " ✓ 준비 완료" : "");
   el.className = "status " + (c.ok ? "ok" : c.front + c.back === 12 ? "bad" : "");
 }
 
 $("pickBtn").addEventListener("click", () => {
-  const picked = pickHidden(state.pars, hiddenTarget());
-  if (!picked) return toast("이 파 합으로는 맞는 조합이 없습니다. 세부 규칙에서 목표를 바꾸거나 직접 골라 주세요");
+  const picked = pickHidden(state.pars, hiddenTarget(), Math.random, state.opts.composition);
+  if (!picked) {
+    return toast(state.opts.composition === "standard"
+      ? "이 코스로는 파4 8·파3 2·파5 2 조합이 안 나옵니다. 세부 규칙에서 숨김 홀 구성을 바꿔 주세요"
+      : "이 파 합으로는 맞는 조합이 없습니다. 세부 규칙에서 목표를 바꾸거나 직접 골라 주세요");
+  }
   state.hidden = picked;
   save();
   renderHoles();
@@ -132,7 +142,13 @@ function renderOpts() {
   $("optRounding").value = state.opts.rounding;
   $("optTie").value = state.opts.tie;
   $("optTarget").value = state.hiddenTarget ?? "";
+  $("optComposition").value = state.opts.composition;
 }
+$("optComposition").addEventListener("change", (e) => {
+  state.opts.composition = e.target.value;
+  save();
+  renderHoles();
+});
 $("optDoublePar").addEventListener("change", (e) => { state.opts.doubleParCap = e.target.checked; save(); });
 $("optHcMax").addEventListener("change", (e) => {
   const v = parseFloat(e.target.value);
@@ -241,7 +257,7 @@ $("addPlayerBtn").addEventListener("click", () => {
 // ---------- 3. 결과 ----------
 function renderResult() {
   $("eventName").value = state.eventName;
-  const c = checkHidden(state.pars, state.hidden, hiddenTarget());
+  const c = checkHidden(state.pars, state.hidden, hiddenTarget(), state.opts.composition);
   const { ranked, incomplete, medalists } = rankPlayers(state.pars, state.hidden, state.players, state.opts);
 
   const warns = [];

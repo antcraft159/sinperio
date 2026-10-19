@@ -64,6 +64,12 @@
           <input type="checkbox" id="optDoublePar">
           숨김 홀 타수는 더블파까지만 셈
         </label>
+        <label>숨김 홀 구성
+          <select id="optComposition">
+            <option value="standard">파4 8개 · 파3 2개 · 파5 2개 (가장 흔함)</option>
+            <option value="any">파 합만 맞으면 어떤 조합이든</option>
+          </select>
+        </label>
         <label>숨김 홀 12개의 파 합
           <input type="number" id="optTarget" inputmode="numeric" min="36" max="60">
         </label>
@@ -72,8 +78,8 @@
         </label>
         <label>핸디캡 표시
           <select id="optRounding">
-            <option value="decimal">소수 첫째 자리 (13.2)</option>
-            <option value="integer">정수로 반올림 (13)</option>
+            <option value="integer">사사오입해 정수로 (13.2 → 13, 가장 흔함)</option>
+            <option value="decimal">소수 첫째 자리 그대로 (13.2)</option>
           </select>
         </label>
         <label>네트가 같을 때
@@ -118,11 +124,11 @@
     <h2>신페리오 방식이란?</h2>
     <p>실력 차이가 나는 아마추어끼리도 공정하게 겨룰 수 있도록 <strong>그날 성적으로 핸디캡을 정하는 방식</strong>입니다. 골프 동호회 월례회에서 많이 씁니다.</p>
     <ol>
-      <li>주최 측이 18홀 중 전반 6개, 후반 6개, 모두 12개 홀을 몰래 고릅니다. 12개 홀의 파 합은 보통 48입니다.</li>
-      <li>핸디캡 = (숨김 12홀 타수 합 × 1.5 − 코스 파 72) × 0.8</li>
+      <li>주최 측이 18홀 중 전반 6개, 후반 6개, 모두 12개 홀을 몰래 고릅니다. 12개 홀의 파 합은 48이고, 보통 파4 8개, 파3 2개, 파5 2개로 구성합니다.</li>
+      <li>핸디캡 = (숨김 12홀 타수 합 × 1.5 − 코스 파 72) × 0.8, 소수점은 보통 사사오입합니다.</li>
       <li>네트 타수 = 18홀 실제 타수 − 핸디캡. 네트가 낮은 사람이 우승입니다.</li>
     </ol>
-    <p><strong>계산 예:</strong> 숨김 12홀 합이 59타, 18홀 총 84타라면 핸디캡은 (59 × 1.5 − 72) × 0.8 = 13.2, 네트는 84 − 13.2 = 70.8입니다.</p>
+    <p><strong>계산 예:</strong> 숨김 12홀 합이 59타, 18홀 총 84타라면 핸디캡은 (59 × 1.5 − 72) × 0.8 = 13.2 → 사사오입해 13, 네트는 84 − 13 = 71입니다.</p>
     <p>이 계산기는 숨김 홀 뽑기부터 핸디캡, 순위, 메달리스트, 카톡 공유까지 폰에서 바로 해 줍니다. 더블파 상한, 핸디캡 상한, 동타 처리 같은 클럽별 규칙도 고를 수 있습니다.</p>
   </section>
 

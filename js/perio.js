@@ -12,11 +12,15 @@
 const DEFAULT_PARS = [4, 4, 3, 5, 4, 4, 3, 4, 5, 4, 4, 3, 5, 4, 4, 3, 4, 5];
 
 const DEFAULT_OPTS = {
-  doubleParCap: false, // 숨김 홀 타수를 더블파까지만 셈
-  hcMax: null,         // 핸디캡 상한 (null 이면 없음)
-  rounding: "decimal", // "decimal": 소수 첫째 자리 / "integer": 정수로 반올림
-  tie: "lowerHc",      // "lowerHc": 핸디 낮은 사람이 위 / "shared": 공동 순위
+  doubleParCap: false,     // 숨김 홀 타수를 더블파까지만 셈
+  hcMax: null,             // 핸디캡 상한 (null 이면 없음)
+  rounding: "integer",     // "integer": 사사오입해 정수 (가장 흔함) / "decimal": 소수 첫째 자리
+  tie: "lowerHc",          // "lowerHc": 핸디 낮은 사람이 위 / "shared": 공동 순위
+  composition: "standard", // "standard": 파4 8·파3 2·파5 2 (가장 흔함) / "any": 파 합만 맞으면 됨
 };
+
+// 가장 흔한 숨김 홀 구성
+const STANDARD_MIX = { 3: 2, 4: 8, 5: 2 };
 
 const sum = (arr) => arr.reduce((a, b) => a + b, 0);
 
@@ -34,22 +38,36 @@ function hiddenParTarget(pars) {
 }
 
 // 숨김 홀 선택이 규칙에 맞는지 확인한다
-function checkHidden(pars, hidden, target = hiddenParTarget(pars)) {
+// 고른 홀에 파3·파4·파5 가 몇 개씩인지
+function parMix(pars, hidden) {
+  const mix = { 3: 0, 4: 0, 5: 0 };
+  pars.forEach((p, i) => hidden[i] && p in mix && mix[p]++);
+  return mix;
+}
+
+const isStandardMix = (mix) => mix[3] === STANDARD_MIX[3] && mix[4] === STANDARD_MIX[4] && mix[5] === STANDARD_MIX[5];
+
+function checkHidden(pars, hidden, target = hiddenParTarget(pars), composition = "any") {
   const front = hidden.slice(0, 9).filter(Boolean).length;
   const back = hidden.slice(9).filter(Boolean).length;
   const parSum = sum(pars.filter((_, i) => hidden[i]));
+  const mix = parMix(pars, hidden);
+  const mixOk = composition !== "standard" || isStandardMix(mix);
   return {
     front,
     back,
     parSum,
     target,
-    ok: front === 6 && back === 6 && parSum === target,
+    mix,
+    mixOk,
+    ok: front === 6 && back === 6 && parSum === target && mixOk,
   };
 }
 
 // 전반 6, 후반 6 을 무작위로 뽑되 파 합이 target 이 되게 한다.
+// composition 이 "standard" 면 파4 8·파3 2·파5 2 구성도 맞춘다.
 // 경우의 수가 84 × 84 라 그냥 여러 번 뽑아 보면 금방 맞는다.
-function pickHidden(pars, target = hiddenParTarget(pars), random = Math.random) {
+function pickHidden(pars, target = hiddenParTarget(pars), random = Math.random, composition = "any") {
   const pick6 = (offset) => {
     const idx = [0, 1, 2, 3, 4, 5, 6, 7, 8];
     for (let i = idx.length - 1; i > 0; i--) {
@@ -60,11 +78,11 @@ function pickHidden(pars, target = hiddenParTarget(pars), random = Math.random) 
   };
   for (let tries = 0; tries < 5000; tries++) {
     const chosen = [...pick6(0), ...pick6(9)];
-    if (sum(chosen.map((i) => pars[i])) === target) {
-      const hidden = Array(18).fill(false);
-      chosen.forEach((i) => (hidden[i] = true));
-      return hidden;
-    }
+    if (sum(chosen.map((i) => pars[i])) !== target) continue;
+    const hidden = Array(18).fill(false);
+    chosen.forEach((i) => (hidden[i] = true));
+    if (composition === "standard" && !isStandardMix(parMix(pars, hidden))) continue;
+    return hidden;
   }
   return null; // 이 코스 파 구성으로는 맞출 수 없음
 }
